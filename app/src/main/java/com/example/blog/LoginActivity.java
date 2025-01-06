@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (db.checkUser(email, password)) {
                     Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, AddBlogActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 } else {

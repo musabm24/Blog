@@ -55,7 +55,7 @@ public class BlogActivity extends AppCompatActivity {
 
         // Back button to return to AddBlogActivity
         backButton.setOnClickListener(v -> {
-            Intent backIntent = new Intent(BlogActivity.this, AddBlogActivity.class);
+            Intent backIntent = new Intent(BlogActivity.this, MainActivity.class);
             startActivity(backIntent);
             finish();
         });
