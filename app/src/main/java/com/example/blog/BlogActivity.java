@@ -19,7 +19,7 @@ public class BlogActivity extends AppCompatActivity {
     private Button saveButton, shareButton, backButton;
     private SQLiteDatabase db;
 
-    private int blogId; // Holds the blog ID for updates
+    private int blogId;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -27,33 +27,25 @@ public class BlogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blog);
 
-        // Initialize database
         db = openOrCreateDatabase("blogsdb", MODE_PRIVATE, null);
 
-        // Bind UI elements
         blogNameEditText = findViewById(R.id.editTextText);
         blogBodyEditText = findViewById(R.id.editTextText2);
         saveButton = findViewById(R.id.Save_Button);
         shareButton = findViewById(R.id.Share_Button);
         backButton = findViewById(R.id.Back_Button);
 
-        // Retrieve blog details passed via Intent
+        //retrieving blogs details passed via intent
         Intent intent = getIntent();
         blogId = intent.getIntExtra("id", -1);
         String blogName = intent.getStringExtra("name");
         String blogBody = intent.getStringExtra("body");
 
-        // Populate EditTexts with blog details
         blogNameEditText.setText(blogName);
         blogBodyEditText.setText(blogBody);
 
-        // Save button to update the blog
         saveButton.setOnClickListener(v -> saveBlogChanges());
-
-        // Share button to share the blog content
         shareButton.setOnClickListener(v -> shareBlog(blogNameEditText.getText().toString(), blogBodyEditText.getText().toString()));
-
-        // Back button to return to AddBlogActivity
         backButton.setOnClickListener(v -> {
             Intent backIntent = new Intent(BlogActivity.this, MainActivity.class);
             startActivity(backIntent);

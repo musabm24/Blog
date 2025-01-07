@@ -33,11 +33,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize the database
         db = openOrCreateDatabase("blogsdb", MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS blogtable (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, body TEXT, image_uri TEXT)");
 
-        // Bind UI elements
         blogName = findViewById(R.id.blog_name);
         blogBody = findViewById(R.id.blog_body);
         selectImageButton = findViewById(R.id.select_image_button);
@@ -46,12 +44,11 @@ public class MainActivity extends AppCompatActivity {
         searchButton = findViewById(R.id.searchBtn);
         deleteSelectedButton = findViewById(R.id.delete_selected_button);
         blogsContainer = findViewById(R.id.blogsContainer);
-
         saveBlogButton.setOnClickListener(v -> addBlog());
         searchButton.setOnClickListener(v -> displayBlogs(searchEditText.getText().toString().trim()));
         deleteSelectedButton.setOnClickListener(v -> deleteSelectedBlogs());
 
-        // Load blogs on activity start
+
         displayBlogs("");
     }
 
@@ -60,10 +57,9 @@ public class MainActivity extends AppCompatActivity {
         String body = blogBody.getText().toString().trim();
 
         if (name.isEmpty() || body.isEmpty()) {
-            Toast.makeText(this, "Please enter both name and body", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter both blog name and body", Toast.LENGTH_SHORT).show();
             return;
         }
-
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("body", body);
@@ -77,17 +73,17 @@ public class MainActivity extends AppCompatActivity {
                 blogBody.getText().clear();
                 displayBlogs(""); // Refresh the list of blogs
             } else {
-                Toast.makeText(this, "Error adding blog", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "error adding blog", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Failed to insert blog", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to add blog", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void displayBlogs(String searchQuery) {
         blogsContainer.removeAllViews();
-        selectedBlogIds.clear(); // Reset selected blogs
+        selectedBlogIds.clear(); //reset selected blogs
 
         String sql = "SELECT * FROM blogtable";
         if (!searchQuery.isEmpty()) {
@@ -124,11 +120,11 @@ public class MainActivity extends AppCompatActivity {
                 blogTextView.setEllipsize(android.text.TextUtils.TruncateAt.END); // Add "..." for long text
                 blogTextView.setPadding(10, 10, 10, 10);
 
-                // Set weight for the text view to use available space
+                // setting weight for the text view to use only available space
                 LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                        0, // Width is determined by weight
+                        0,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1.0f // Weight
+                        1.0f
                 );
                 blogTextView.setLayoutParams(textParams);
 
@@ -139,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 Button deleteButton = new Button(this);
                 deleteButton.setText("Delete");
                 deleteButton.setOnClickListener(view -> deleteBlog(id));
-
-                // Add views to the layout
                 blogEntryLayout.addView(blogCheckBox);
                 blogEntryLayout.addView(blogTextView);
                 blogEntryLayout.addView(showButton);
@@ -148,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
                 blogsContainer.addView(blogEntryLayout);
             } else {
-                Log.e("AddBlogActivity", "Invalid column indices");
+                Log.e("AddBlogActivity", "invalid column indices");
             }
         }
 
@@ -160,23 +154,23 @@ public class MainActivity extends AppCompatActivity {
         int rowsDeleted = db.delete("blogtable", "id = ?", new String[]{String.valueOf(id)});
         if (rowsDeleted > 0) {
             Toast.makeText(this, "Blog deleted", Toast.LENGTH_SHORT).show();
-            displayBlogs(""); // Refresh the list of blogs
+            displayBlogs("");
         } else {
-            Toast.makeText(this, "Error deleting blog", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "error deleting blog", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void deleteSelectedBlogs() {
         if (selectedBlogIds.isEmpty()) {
-            Toast.makeText(this, "No blogs selected for deletion", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No blogs selected for deleting", Toast.LENGTH_SHORT).show();
             return;
         }
 
         for (int id : selectedBlogIds) {
             db.delete("blogtable", "id = ?", new String[]{String.valueOf(id)});
         }
-        Toast.makeText(this, "Selected blogs deleted", Toast.LENGTH_SHORT).show();
-        displayBlogs(""); // Refresh the list of blogs
+        Toast.makeText(this, "selected blogs deleted", Toast.LENGTH_SHORT).show();
+        displayBlogs("");
     }
 
     private void showBlogDetails(int id, String name, String body) {
